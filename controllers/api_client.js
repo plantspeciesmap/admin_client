@@ -22,7 +22,6 @@ class ApiClient{
         return true;
     }
 
-    // route will always start with / and dont ends with /
     async request(method, route, body={}){
         if(!["get", "put", "post", "delete", "patch"].includes(method.toLowerCase())) {
             return {
@@ -31,11 +30,6 @@ class ApiClient{
                 data: null
             }
         }
-        // while (true){
-        //     if(!(route.startsWith("/available") || route.startsWith("/auth")) && ApiClient.#token === ""){
-        //         await new Promise((resolve) => setTimeout(resolve, 10));
-        //     }else break;
-        // }
         const config = {
             method: method.toLowerCase(),
             url: `${BASE_API_URL}${route}`,
@@ -49,7 +43,7 @@ class ApiClient{
             let res = await ApiClient.axiosClient(config);
             return {
                 success: true,
-                message: "Success",
+                message: res.data.message || "Successful",
                 data: res.data.data
             }
         }catch (e) {
@@ -60,53 +54,6 @@ class ApiClient{
             }
         }
     }
-
-
-    // async uploadFile(file){
-    //     let data = new FormData();
-    //     data.append('file', file);
-    //     const config = {
-    //         method: 'post',
-    //         url: `${BASE_FILE_MANAGEMENT_URL}/upload/file`,
-    //         data : data
-    //     }
-    //     try{
-    //         let res = await ApiClient.axiosClient(config);
-    //         let fileLink = res.data;
-    //         return {
-    //             success: true,
-    //             link: fileLink
-    //         };
-    //     }catch (e) {
-    //         return {
-    //             success: false,
-    //             link: ""
-    //         }
-    //     }
-    // }
-
-    // async uploadImage(file, width){
-    //     let data = new FormData();
-    //     data.append('file', file);
-    //     const config = {
-    //         method: 'post',
-    //         url: `${BASE_FILE_MANAGEMENT_URL}/upload/image/` + (width ? `?width=${width}` : ""),
-    //         data : data
-    //     }
-    //     try{
-    //         let res = await ApiClient.axiosClient(config);
-    //         let imgLink = res.data;
-    //         return {
-    //             success: true,
-    //             link: imgLink
-    //         };
-    //     }catch (e) {
-    //         return {
-    //             success: false,
-    //             link: ""
-    //         }
-    //     }
-    // }
 }
 
 module.exports =  ApiClient;

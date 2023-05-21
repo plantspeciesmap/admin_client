@@ -1,23 +1,19 @@
 import ApiClient from "./api_client";
 import TreeController from "./tree";
-
+import UserController from './user';
+import ContributionController from  "./contribution";
 
 class GlobalController{
     /** @type {GlobalController} */
     static instance = null;
     apiClient;
-    // static profile = null; /** @type {Profile} */
 
     constructor() {
         this.apiClient = ApiClient.getInstance();
-        this.treeController = new TreeController(this.apiClient);  
+        this.treeController = new TreeController(this.apiClient);
+        this.userController = new UserController(this.apiClient);
+        this.contributionController = new ContributionController(this.apiClient);
     }
-
-    // static async fetchProfile(ignore_cache = false){
-    //     if(GlobalController.profile != null && ignore_cache===false) return GlobalController.profile;
-    //     GlobalController.profile = await GlobalController.getInstance().profileController.fetch();
-    //     return GlobalController.profile;
-    // }
 
     static getInstance() {
         if(GlobalController.instance == null) GlobalController.instance = new GlobalController();

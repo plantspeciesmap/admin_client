@@ -1,4 +1,4 @@
-import { Drawer, TextInput, Button } from '@mantine/core';
+import { Drawer, TextInput, Button ,Space} from '@mantine/core';
 import Tree from '../models/tree'
 import {useEffect, useRef} from "react";
 
@@ -14,11 +14,13 @@ export default function TreeDrawer({ isOpen, isEdit, currentTreeRef, onClickClos
     return (
         <>
             <Drawer
+                tt="capitalize"
                 opened={isOpen}
                 onClose={onClickCloseModal}
-                title={ isEdit ? "Edit Tree Details" : "Add Tree Details"}
+                title={ isEdit ? "Edit Tree Details" : "add Tree Details"}
                 overlayProps={{ opacity: 0.5, blur: 4 }}
             >
+                <Space h="xl" />
                 <TextInput
                     placeholder="Common Name of the tree"
                     label="Common Name"
@@ -26,6 +28,7 @@ export default function TreeDrawer({ isOpen, isEdit, currentTreeRef, onClickClos
                     onChange={(e)=> {treeRef.current.name = e.target.value}}
                     withAsterisk
                 />
+                <Space h="md" />
                 <TextInput
                     placeholder="Scientific Name of the tree"
                     label="Scientific Name"
@@ -33,18 +36,21 @@ export default function TreeDrawer({ isOpen, isEdit, currentTreeRef, onClickClos
                     onChange={(e)=> {treeRef.current.scientificName = e.target.value}}
                     withAsterisk
                 />
+                <Space h="md" />
                 <TextInput
                     placeholder="Description of the tree"
                     label="Description"
                     defaultValue={isEdit ? currentTreeRef.current.description : treeRef.current.description}
                     onChange={(e)=> {treeRef.current.description = e.target.value}}
                 />
+                <Space h="xl" />
 
-                <Button variant="light"
+                <Button variant="outline"
                         onClick={()=>{isEdit ? onClickEdit(treeRef.current) : onClickSave(treeRef.current)}}
                 >
                     SUBMIT
                 </Button>
+
             </Drawer>
         </>
     );
