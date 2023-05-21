@@ -6,6 +6,7 @@ class Contribution {
         this.id = null;
         this.name = "";
         this.description = "";
+        this.image = "";
         this.status = null;
         this.latitude = null;
         this.longitude = null;
@@ -20,6 +21,7 @@ class Contribution {
 
         data.id = json.id || data.id;
         data.name = json.name || data.name;
+        data.image = json.image || data.image;
         data.description = json.description || data.description;
         data.status = json.status || data.status;
         data.latitude = json.latitude || data.latitude;
@@ -40,18 +42,21 @@ class Contribution {
     toJSON() {
         return {
             id: this.id,
+            name: this.name,
+            description: this.description,
+            image: this.image,
             status: this.status,
             latitude: this.latitude,
             longitude: this.longitude,
-            tree: {
+            tree: this.tree != null ? {
                 id: this.tree.id,
                 name: this.tree.name,
                 scientificName: this.tree.scientificName
-            },
+            } : null,
             user: {
-                id: this.user.id,
+                id: this.user?.id??null,
                 profile: {
-                    name: this.user.profile.name
+                    name: this.user?.profile?.name??""
                 }
             },
             submittedOn: this.submittedOn

@@ -72,7 +72,7 @@ class ContributionController{
 
 
     async update(record){
-        const res = await this.apiClient.request('PUT', UPDATE_CONTRIBUTION_ROUTE+"/"+record.id, record.json());
+        const res = await this.apiClient.request('PUT', UPDATE_CONTRIBUTION_ROUTE+"/"+record.id, record.toJSON());
         if(res.success) {
             return {
                 success: true,

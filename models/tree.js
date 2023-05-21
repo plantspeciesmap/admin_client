@@ -32,6 +32,12 @@ class Tree{
         return this.isDescriptionBlank() && (this.name === null || this.name === undefined || this.name === '');
     }
 
+
+    get value(){
+        return this.name + " (" + this.scientificName + ")";
+    }
+
+
     static empty(){
         return new Tree({
             id: null,

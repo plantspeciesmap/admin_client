@@ -6,6 +6,7 @@ import ContributionDrawer from './ContributionDrawer';
 import GlobalController from "../controllers/controller";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import Contribution from '../models/contribution';
 
 const PAGE_SIZE = 16;
 
@@ -14,7 +15,7 @@ const PAGE_SIZE = 16;
 export default function ContributionTable() {
     const controller = GlobalController.getInstance().contributionController;
     const [contributions, setContributions] = useState([]);
-    const currentRecord = useRef(null);
+    const currentRecord = useRef(Contribution.empty());
     const [page, setPage] = useState(1);
     const [searchRecords, setSearchRecords] = useState(contributions);
     const [rows, setRows] = useState(searchRecords.slice(0, PAGE_SIZE));
@@ -114,7 +115,7 @@ export default function ContributionTable() {
                                     onClick={() => {
                                         currentRecord.current = contribution;
                                         setIsOpenNewContributionModal(true);
-                                        setIsEditContributionModal(true);
+                                        // setIsEditContributionModal(true);
                                     }}
                             >
                                 DETAILS

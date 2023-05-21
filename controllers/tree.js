@@ -54,7 +54,7 @@ class TreeController{
             return {
                 success: true,
                 message: res.message,
-                data: Tree.fromJson(res.data)
+                data: res.data
             }
         }else {
             return {
