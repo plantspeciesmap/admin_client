@@ -3,7 +3,6 @@ import { DataTable } from 'mantine-datatable';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useEffect, useState, useRef } from 'react';
 import TreeDrawer from './TreeDrawer';
-import AddEditTreeModal from './AddEditTreeModal';
 import GlobalController from "../controllers/controller";
 import toast from "react-hot-toast";
 
@@ -16,8 +15,8 @@ export default function TreeTable() {
   const [trees, setTrees] = useState([]);
   const currentRecord = useRef(null);
   const [page, setPage] = useState(1);
-  const [searchrecords, setSearchRecords] = useState(trees);
-  const [rows, setRows] = useState(searchrecords.slice(0, PAGE_SIZE));
+  const [searchRecords, setSearchRecords] = useState(trees);
+  const [rows, setRows] = useState(searchRecords.slice(0, PAGE_SIZE));
   const [query, setQuery] = useState('');
   const [debouncedQuery] = useDebouncedValue(query, 500);
   let [isOpenNewTreeModal, setIsOpenNewTreeModal] = useState(false)
@@ -26,8 +25,8 @@ export default function TreeTable() {
   const loadPage = (page) => {
     const from = (page - 1) * PAGE_SIZE;
     const to = from + PAGE_SIZE;
-    setRows(searchrecords.slice(from, to));
-    console.log("loadpage/src", searchrecords);
+    setRows(searchRecords.slice(from, to));
+    console.log("loadpage/src", searchRecords);
   }
 
   const submitNewTree = (record) => {
@@ -136,7 +135,7 @@ const editTree = (record) => {
               </Button>
           },
         ]}
-        totalRecords={searchrecords.length}
+        totalRecords={searchRecords.length}
         recordsPerPage={PAGE_SIZE}
         page={page}
         onPageChange={(p) => setPage(p)}
