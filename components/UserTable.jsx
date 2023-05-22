@@ -13,7 +13,7 @@ import {
     Center,
     useMantineTheme, Space,
 } from '@mantine/core';
-import { IconPencil } from '@tabler/icons-react';
+import {IconDownload, IconPencil} from '@tabler/icons-react';
 import GlobalController from "../controllers/controller";
 
 import toast from "react-hot-toast";
@@ -97,6 +97,15 @@ export function UserTable () {
                 </Text>
             </td>
             <td>
+                <Text fz="sm" c="dimmed">
+                    <ActionIcon onClick={()=>{
+                        GlobalController.getInstance().reportController.downloadForUser(item.id);
+                    }}>
+                        <IconDownload size="1rem" stroke={1.5} />
+                    </ActionIcon>
+                </Text>
+            </td>
+            <td>
                 <Group spacing={0} position="right">
                     <Button onClick={
                         () => {
@@ -124,7 +133,8 @@ export function UserTable () {
                     <th>Role</th>
                     <th>Email</th>
                     <th>Points</th>
-                    <th />
+                    <th>Report</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>{rows}</tbody>
