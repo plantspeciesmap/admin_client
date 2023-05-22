@@ -7,16 +7,17 @@ import GlobalController from "../controllers/controller";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import Contribution from '../models/contribution';
+import {useRouter} from "next/router";
 
 const PAGE_SIZE = 16;
 
 // TODO: fix blank search query, not consistent
 // TODO: fix after add/edit page returns to first page but pagination bar is not updated
-export default function ContributionTable() {
+export default function ContributionTable({filterType}) {
     const controller = GlobalController.getInstance().contributionController;
     const [contributions, setContributions] = useState([]);
     const currentRecord = useRef(Contribution.empty());
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(0);
     const [searchRecords, setSearchRecords] = useState(contributions);
     const [rows, setRows] = useState(searchRecords.slice(0, PAGE_SIZE));
     const [query, setQuery] = useState('');
@@ -27,37 +28,26 @@ export default function ContributionTable() {
     const loadPage = (page) => {
         const from = (page - 1) * PAGE_SIZE;
         const to = from + PAGE_SIZE;
+        // setRows(contributions);
         setRows(searchRecords.slice(from, to));
         console.log("loadpage/src", searchRecords);
     }
 
-    const editContribution = (record) => {
-        controller.update(record).then((res) => {
-            if (res.success) {
-                setContributions(contributions.map((e) => {
-                    if (e.id === record.id) {
-                        return record;
-                    }
-                    return e;
-                }))
-                setIsOpenNewContributionModal(false);
-                toast.success(res.message);
-            } else {
-                toast.error(res.message);
-            }
-        })
+    function updateRecord(record){
+        let tmp_contributions = contributions.filter(e => e.id !== record.id)
+        setContributions([...tmp_contributions]);
     }
 
     useEffect(()=>{
-        controller.fetch_all().then((records)=>{
+        controller.fetch_by_status(filterType).then((records)=>{
             console.log(records);
             setContributions(records.data);
         });
-    }, []);
+    }, [filterType]);
 
     useEffect(() => {
         loadPage(page);
-    }, [page, contributions]);
+    }, [page, searchRecords]);
 
     useEffect(() => {
         setSearchRecords(
@@ -71,7 +61,8 @@ export default function ContributionTable() {
             })
         );
         console.log(debouncedQuery, debouncedQuery.length);
-        loadPage(1);
+        // loadPage(1);
+        setPage(1)
     }, [debouncedQuery, contributions]);
 
     return (
@@ -137,9 +128,8 @@ export default function ContributionTable() {
                 isOpen={isOpenNewContributionModal}
                 isEdit={isEditContributionModal}
                 currentContributionRef={currentRecord}
+                updateRecord={updateRecord}
                 onClickCloseModal={() => setIsOpenNewContributionModal(false)}
-                // onClickSave={(e) => submitNewContribution(e)}
-                onClickEdit={(e) => editContribution(e)}
             />
         </Container>
     );

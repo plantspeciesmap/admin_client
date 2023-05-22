@@ -66,7 +66,7 @@ const editTree = (record) => {
 
   useEffect(() => {
     loadPage(page);
-  }, [page, trees]);
+  }, [page, searchRecords]);
 
   useEffect(() => {
     setSearchRecords(
@@ -80,7 +80,7 @@ const editTree = (record) => {
       })
     );
     console.log(debouncedQuery, debouncedQuery.length);
-    loadPage(1);
+    setPage(1);
   }, [debouncedQuery, trees]);
 
     return (

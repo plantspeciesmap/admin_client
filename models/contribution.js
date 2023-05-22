@@ -63,6 +63,14 @@ class Contribution {
         };
     }
 
+    toUpdateRequestJSON() {
+        return {
+            id: this.id,
+            status: this.status.toUpperCase(),
+            treeId: (this.tree && this.tree.id) ? this.tree.id: null
+        };
+    }
+
     static empty(){
         return new Contribution();
     }

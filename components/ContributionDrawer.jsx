@@ -1,13 +1,16 @@
-import {Drawer, TextInput, Button, Space, Title, Table, Flex, Autocomplete, Text} from '@mantine/core';
+import {Drawer, TextInput, Button, Space, Title, Table, Flex, Autocomplete, Text, Divider} from '@mantine/core';
 import Contribution from '../models/contribution'
 import {useEffect, useRef, useState} from "react";
 import Tree from "../models/tree";
 import GlobalController from "../controllers/controller";
 import { toast } from 'react-hot-toast';
+import tree from "../models/tree";
 
-export default function ContributionDrawer({ isOpen, currentContributionRef, onClickCloseModal, onClickSave, onClickEdit }) {
+export default function ContributionDrawer({ isOpen, currentContributionRef, onClickCloseModal, updateRecord}) {
     const [selectedTree, setSelectedTree] = useState(Tree.empty());
+    const newTreeRef = useRef(Tree.empty());
     const [searchTreeRecords, setSearchTreeRecords] = useState([]);
+    const [showAddTreeForm, setShowAddTreeForm] = useState(false);
     const contributionController = GlobalController.getInstance().contributionController;
     const treeController = GlobalController.getInstance().treeController;
     const autocompleteRef = useRef(null);
@@ -24,10 +27,38 @@ export default function ContributionDrawer({ isOpen, currentContributionRef, onC
             onClickCloseModal();
             if (res.success) {
                 toast.success(res.message);
+                updateRecord(contribution);
             } else {
                 toast.error(res.message);
             }
-            // TODO uppdate component of table also
+        })
+    }
+
+    function acceptContribution() {
+        let contribution = Contribution.fromJson(currentContributionRef.current.toJSON());
+        contribution.tree = selectedTree;
+        contribution.status = "ACCEPTED";
+        contributionController.update(contribution).then((res)=>{
+            onClickCloseModal();
+            if (res.success) {
+                toast.success(res.message);
+                updateRecord(contribution);
+            } else {
+                toast.error(res.message);
+            }
+        })
+    }
+
+    function addTree(){
+        treeController.create(newTreeRef.current).then((e)=>{
+            if (e.success){
+                toast.success(e.message);
+                const createdTree = Tree.fromJson(e.data);
+                setSelectedTree(createdTree);
+                setShowAddTreeForm(false);
+            }else{
+                toast.error(e.message);
+            }
         })
     }
 
@@ -55,7 +86,7 @@ export default function ContributionDrawer({ isOpen, currentContributionRef, onC
                 overlayProps={{ opacity: 0.5, blur: 4 }}
             >
                 <Space h="xl" />
-                <img src={currentContributionRef.current?.image} width="300px" />
+                <img src={currentContributionRef.current?.image} width="250px" />
                 <Space h="sm" />
                 <Table withColumnBorders withBorder>
                     <tbody>
@@ -91,65 +122,77 @@ export default function ContributionDrawer({ isOpen, currentContributionRef, onC
 
                     </tbody>
                 </Table>
-                {/*<TextInput*/}
-                {/*    placeholder="Suggested tree name of the contribution"*/}
-                {/*    label="Name"*/}
-                {/*    defaultValue={isEdit ? currentcurrentContributionRef.current.name : currentContributionRef.current.name}*/}
-                {/*    onChange={(e)=> {currentContributionRef.current.name = e.target.value}}*/}
-                {/*    withAsterisk*/}
-                {/*/>*/}
                 <Space h="md" />
-
-                {/*<TextInput*/}
-                {/*    placeholder="Scientific Name of the contribution"*/}
-                {/*    label="Scientific Name"*/}
-                {/*    defaultValue={isEdit ? currentcurrentContributionRef.current.scientificName : currentContributionRef.current.scientificName}*/}
-                {/*    onChange={(e)=> {currentContributionRef.current.scientificName = e.target.value}}*/}
-                {/*    withAsterisk*/}
-                {/*/>*/}
-                {/*<Space h="md" />*/}
-                {/*<TextInput*/}
-                {/*    placeholder="Description of the contribution"*/}
-                {/*    label="Description"*/}
-                {/*    defaultValue={currentcurrentContributionRef.current.description : currentContributionRef.current.description}*/}
-                {/*    onChange={(e)=> {currentContributionRef.current.description = e.target.value}}*/}
-                {/*/>*/}
-                {/*<Space h="xl" />*/}
-
-
                 {
                     (currentContributionRef.current?.status??"").toLowerCase() === "pending" &&
                     <>
-                        <Flex>
-                            <Button variant="outline" size="sm">
-                                ACCEPT
+                        <Flex
+                            direction="column"
+                        >
+                            <Divider my="sm" />
+                            <Button variant="outline" onClick={rejectContribution} color="red">
+                                Reject Contribution
                             </Button>
-                            <Space w="sm" />
-                            <Button variant="outline" onClick={rejectContribution}>
-                                REJECT
+                            <Divider my="sm" />
+                            {
+                                !selectedTree.id ?  <Autocomplete
+                                        ref={autocompleteRef}
+                                        label="Assign a Tree"
+                                        placeholder="Pick a tree"
+                                        itemComponent={(e =>  <div onClick={_=>{
+                                            setSelectedTree(e);
+                                        }}>
+                                            <Text>{e.name}</Text>
+                                            <Text size="xs" color="dimmed">
+                                                {e.scientificName}
+                                            </Text>
+                                        </div>)}
+                                        data={searchTreeRecords}
+                                        onChange={(e)=>{autocompleteTree(e)}}
+                                    /> :
+                                    <div>
+                                        Selected Tree: {selectedTree.name}
+                                    </div>
+                            }
+                            <Space h="md" />
+                            <Button variant="outline" size="sm" color="green" disabled={!selectedTree.id} onClick={acceptContribution}>
+                                Accept Contribution
                             </Button>
-                        </Flex>
-                        {
-                            !selectedTree.id ?  <Autocomplete
-                                ref={autocompleteRef}
-                                label="Your favorite framework/library"
-                                placeholder="Pick one"
-                                itemComponent={(e =>  <div onClick={_=>{
-                                    setSelectedTree(e);
-                                }}>
-                                    <Text>{e.name}</Text>
-                                    <Text size="xs" color="dimmed">
-                                    {e.scientificName}
-                                    </Text>
-                                </div>)}
-                                data={searchTreeRecords}
-                                onChange={(e)=>{autocompleteTree(e)}}
-                            
-                            /> :
-                            <div>
-                                Selected Tree: {selectedTree.name}
-                            </div>
+                            <Divider my="sm" />
+                            {
+                                showAddTreeForm ?
+                                    <>
+                                        <TextInput
+                                            placeholder="Common Name of the tree"
+                                            label="Common Name"
+                                            defaultValue={currentContributionRef.current.name}
+                                            onChange={(e)=> {newTreeRef.current.name = e.target.value}}
+                                            withAsterisk
+                                        />
+                                        <Space h="md" />
+                                        <TextInput
+                                            placeholder="Scientific Name of the tree"
+                                            label="Scientific Name"
+                                            onChange={(e)=> {newTreeRef.current.scientificName = e.target.value}}
+                                            withAsterisk
+                                        />
+                                        <Space h="md" />
+                                        <TextInput
+                                            placeholder="Description of the tree"
+                                            label="Description"
+                                            defaultValue={currentContributionRef.current.description}
+                                            onChange={(e)=> {newTreeRef.current.description = e.target.value}}
+                                        />
+                                        <Space h="xl" />
+                                        <Button variant="outline" size="sm" color="blue" onClick={addTree}>
+                                            Add Tree
+                                        </Button>
+                                    </> :
+                                    <Button variant="outline" size="sm" color="blue" onClick={()=>setShowAddTreeForm(true)}>
+                                        Add New Tree
+                                    </Button>
                         }
+                        </Flex>
                     </>
                 }
 

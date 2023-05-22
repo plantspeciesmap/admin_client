@@ -10,4 +10,5 @@ module.exports = {
     "FETCH_ALL_CONTRIBUTIONS_BY_STATUS_ROUTE": "/contribute/filter",
     "FETCH_CONTRIBUTION_DETAILS_ROUTE": "/contribute",
     "UPDATE_CONTRIBUTION_ROUTE": "/contribute",
+    "LOGIN_EMAIL_ROUTE":"/auth/google",
 }
