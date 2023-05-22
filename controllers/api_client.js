@@ -12,7 +12,7 @@ class ApiClient{
         if(ApiClient.instance !== null) return ApiClient.instance;
         ApiClient.axiosClient = axios;
         ApiClient.instance = new ApiClient();
-        ApiClient.#token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjIyN2M2MjRiLTc4NTktNGVmNi1hYjI0LTlmYjJlZWE2YWU2ZSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcxNjE3OTQzNX0.3Qd9LM4tTGMJLPPzQ7CoPDOiF6cGARFNH_Ldr8DvYxI";
+        ApiClient.#token = "";
         return  ApiClient.instance;
     }
 
@@ -22,7 +22,42 @@ class ApiClient{
         return true;
     }
 
+    static isLoggedIn(){
+        if (ApiClient.#token === ""){
+            if (window && document){
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Check if the cookie starts with the token name
+                    if (cookie.startsWith('token=')) {
+                        // Extract the token value
+                        const token = cookie.substring('token='.length);
+                        ApiClient.#token = token;
+                        break;
+                    }
+                }
+            }
+        }
+        return ApiClient.#token !== "";
+    }
+
     async request(method, route, body={}){
+        // if no token, retrieve
+        if (ApiClient.#token === ""){
+            if (window && document){
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Check if the cookie starts with the token name
+                    if (cookie.startsWith('token=')) {
+                        // Extract the token value
+                        const token = cookie.substring('token='.length);
+                        ApiClient.#token = token;
+                        break;
+                    }
+                }
+            }
+        }
         if(!["get", "put", "post", "delete", "patch"].includes(method.toLowerCase())) {
             return {
                 success: false,
@@ -39,6 +74,7 @@ class ApiClient{
             },
             data: JSON.stringify(body)
         }
+        console.log( ApiClient.#token)
         try{
             let res = await ApiClient.axiosClient(config);
             return {
