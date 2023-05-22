@@ -6,11 +6,11 @@ import {Main} from "next/document";
 import {IconLoader, IconPlant2, IconSocial, IconTrash, IconUsers} from "@tabler/icons-react";
 
 const data = [
-    { link: '', label: 'Trees', icon: IconPlant2 },
-    { link: '', label: 'Accepted Contributions', icon: IconSocial },
-    { link: '', label: 'Pending Contributions', icon: IconLoader },
-    { link: '', label: 'Rejected Contributions', icon: IconTrash },
-    { link: '', label: 'Users', icon: IconUsers }
+    { link: '/', label: 'Trees', icon: IconPlant2 },
+    { link: '/contributions/accepted', label: 'Accepted Contributions', icon: IconSocial },
+    { link: '/contributions/', label: 'Pending Contributions', icon: IconLoader },
+    { link: '/contributions/rejected', label: 'Rejected Contributions', icon: IconTrash },
+    { link: '/users', label: 'Users', icon: IconUsers }
 ];
 
 

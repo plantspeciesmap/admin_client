@@ -92,18 +92,18 @@ export default function NavbarSimpleColored({navData}) {
     const [active, setActive] = useState('Billing');
 
     const links = navData.map((item) => (
-        <a
+        <Link
             className={cx(classes.link, { [classes.linkActive]: item.label === active })}
             href={item.link}
             key={item.label}
             onClick={(event) => {
-                event.preventDefault();
+                // event.preventDefault();
                 setActive(item.label);
             }}
         >
             <item.icon className={classes.linkIcon} stroke={1.5} />
             <span>{item.label}</span>
-        </a>
+        </Link>
     ));
 
     return (
