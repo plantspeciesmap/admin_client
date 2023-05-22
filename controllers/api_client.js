@@ -16,6 +16,10 @@ class ApiClient{
         return  ApiClient.instance;
     }
 
+    get token(){
+        return ApiClient.#token;
+    }
+
     setToken(token){
         if(!token) return false;
         ApiClient.#token = token;

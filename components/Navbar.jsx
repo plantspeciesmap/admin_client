@@ -1,20 +1,11 @@
-import { useState } from 'react';
+import {useEffect, useRef, useState} from 'react';
 import { createStyles, Navbar, Group, Code, getStylesRef, rem } from '@mantine/core';
-import {
-    IconBellRinging,
-    IconFingerprint,
-    IconKey,
-    IconSettings,
-    Icon2fa,
-    IconDatabaseImport,
-    IconReceipt2,
-    IconSwitchHorizontal,
-    IconLogout,
-} from '@tabler/icons-react';
+import {IconLogout, IconDownload} from '@tabler/icons-react';
 import TreeTable from "../components/TreeTable";
 // import { MantineLogo } from '@mantine/ds';
 import Link from "next/link";
-
+import  ApiClient from "../controllers/api_client";
+import GlobalController from "../controllers/controller";
 
 const useStyles = createStyles((theme) => ({
     navbar: {
@@ -90,6 +81,7 @@ const useStyles = createStyles((theme) => ({
 export default function NavbarSimpleColored({navData}) {
     const { classes, cx } = useStyles();
     const [active, setActive] = useState('Billing');
+    const [loggedIn, setLoggedIn] = useState();
 
     const links = navData.map((item) => (
         <Link
@@ -106,9 +98,17 @@ export default function NavbarSimpleColored({navData}) {
         </Link>
     ));
 
+    function clearCookie(cookieName) {
+        document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    }
+
+    async  function downloadAllReport(){
+        await GlobalController.getInstance().reportController.downloadAll();
+    }
+
     return (
         <>
-            <Navbar width={{ sm: 300 }} p="md" className={classes.navbar}>
+            <Navbar width={{ sm: 300 }} p="md" className={classes.navbar} hidden={true}>
                 <Navbar.Section grow>
                     <Group className={classes.header} position="apart">
                         {/*<MantineLogo size={28} inverted />*/}
@@ -118,12 +118,17 @@ export default function NavbarSimpleColored({navData}) {
                 </Navbar.Section>
 
                 <Navbar.Section className={classes.footer}>
-                    {/*<a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>*/}
-                    {/*    <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />*/}
-                    {/*    <span>Change account</span>*/}
-                    {/*</a>*/}
+                    <div className={classes.link} onClick={async (event)=>{
+                        await downloadAllReport();
+                    }}>
+                        <IconDownload className={classes.linkIcon} stroke={1.5} />
+                        <span>Download Report</span>
+                    </div>
 
-                    <Link href="/" className={classes.link} onClick={(event) => event.preventDefault()}>
+                    <Link href="/" className={classes.link} onClick={(event) => {
+                        clearCookie("token");
+                        window.location.href="/";
+                    }}>
                         <IconLogout className={classes.linkIcon} stroke={1.5} />
                         <span>Logout</span>
                     </Link>

@@ -5,9 +5,10 @@ import NavbarSimpleColored from "../components/Navbar";
 import {Main} from "next/document";
 import {IconLoader, IconPlant2, IconSocial, IconTrash, IconUsers} from "@tabler/icons-react";
 import {getCookies} from "cookies-next";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {IconMail} from "@tabler/icons-react";
 import Link from "next/link";
+import ApiClient from "../controllers/api_client";
 
 const data = [
     { link: '/trees', label: 'Trees', icon: IconPlant2 },
@@ -18,21 +19,24 @@ const data = [
 ];
 
 
+
 export default function App({ Component, pageProps }) {
-  return(
+    const [loggedIn, setLoggedIn] = useState();
+    useEffect(()=>{
+        setLoggedIn(ApiClient.isLoggedIn());
+    }, [])
+    return(
         <>
             <Toaster
               position="bottom-center"
               reverseOrder={false}
             />
             <AppShell
-              navbar={<NavbarSimpleColored navData={data} width={{ base: 300 }} />}
+                navbar={<NavbarSimpleColored navData={data} width={{ base: 300 }} />}
+                hidden={!loggedIn}
             >
-              <Component {...pageProps} />
+                <Component {...pageProps} />
             </AppShell>
         </>
   )
 }
-
-
-
