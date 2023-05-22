@@ -112,7 +112,7 @@ export default function NavbarSimpleColored({navData}) {
                 <Navbar.Section grow>
                     <Group className={classes.header} position="apart">
                         {/*<MantineLogo size={28} inverted />*/}
-                        <Code className={classes.version}>v3.1.2</Code>
+                        <Code className={classes.version}>ZUNO_ADMIN</Code>
                     </Group>
                     {links}
                 </Navbar.Section>
