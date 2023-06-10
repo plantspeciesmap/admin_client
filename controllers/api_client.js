@@ -1,6 +1,6 @@
 import axios from "axios";
 // import {BASE_API_URL, BASE_FILE_MANAGEMENT_URL} from  "../config";
-const BASE_API_URL = "https://plant.tanmoy.online/admin"
+const BASE_API_URL = "https://plantapi.jusense.org/admin"
 
 
 class ApiClient{
