@@ -24,7 +24,7 @@ export default function home(){
                 </Center>
                     :
                     <Center h={400}>
-                        <Link href="https://plant.tanmoy.online/auth/google">
+                        <Link href="https://plantapi.jusense.org/auth/google">
                             <Button leftIcon={<IconMail size="1rem" />}>
                                 Login with mail
                             </Button>
