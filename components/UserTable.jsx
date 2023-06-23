@@ -29,6 +29,7 @@ const MAX_ENTRIES_PER_PAGE = 10;
 
 export function UserTable () {
     const controller = GlobalController.getInstance().userController;
+    const reportController  = GlobalController.getInstance().reportController
     const [data, setData] = useState([]);
     const [currPage, setCurrPage] = useState(1);
     const [totalEntries, setTotalEntries] = useState(10);
@@ -64,6 +65,9 @@ export function UserTable () {
             // }, 1000)
         })
     }, []);
+
+
+
 
     const theme = useMantineTheme();
     const rows = data.map((item, idx) => (

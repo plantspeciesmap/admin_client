@@ -9,7 +9,7 @@ class ReportController{
     async downloadAll(){
         const config = {
             method: "get",
-            url: `https://plant.tanmoy.online/report/all`,
+            url: `https://plantapi.jusense.org/report/all`,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': this.apiClient.token
@@ -29,7 +29,7 @@ class ReportController{
     async downloadForUser(user_id){
         const config = {
             method: "get",
-            url: `https://plant.tanmoy.online/report/`+user_id,
+            url: `https://plantapi.jusense.org/report/`+user_id,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': this.apiClient.token

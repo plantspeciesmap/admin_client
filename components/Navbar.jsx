@@ -49,6 +49,7 @@ const useStyles = createStyles((theme) => ({
         padding: `${theme.spacing.xs} ${theme.spacing.sm}`,
         borderRadius: theme.radius.sm,
         fontWeight: 500,
+        cursor: 'pointer',
 
         '&:hover': {
             backgroundColor: theme.fn.lighten(
@@ -112,7 +113,7 @@ export default function NavbarSimpleColored({navData}) {
                 <Navbar.Section grow>
                     <Group className={classes.header} position="apart">
                         {/*<MantineLogo size={28} inverted />*/}
-                        <Code className={classes.version}>ZUNO_ADMIN</Code>
+                        <Code className={classes.version}>UTVIDA ADMIN</Code>
                     </Group>
                     {links}
                 </Navbar.Section>
